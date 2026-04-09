@@ -120,10 +120,14 @@ Copy `.env.example` → `.env` and fill in the values below.
 | `LIVEKIT_API_SECRET` | ✅ | LiveKit Cloud → API Keys |
 | `GROQ_API_KEY` | optional | [console.groq.com](https://console.groq.com) — only needed if you switch `LLM_PROVIDER` to `"groq"` |
 | `SARVAM_API_KEY` | ✅ (default STT) | [dashboard.sarvam.ai](https://dashboard.sarvam.ai) |
-| `OPENAI_API_KEY` | ✅ (default TTS) | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
+| `OPENAI_API_KEY` | optional | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) — only for `TTS_PROVIDER = "openai"` |
 | `DEEPGRAM_API_KEY` | optional | [console.deepgram.com](https://console.deepgram.com) |
 | `GOOGLE_APPLICATION_CREDENTIALS` | optional | GCP service-account JSON path — only for `STT_PROVIDER = "google"` |
-| `GOOGLE_API_KEY` | ✅ (default LLM) | [aistudio.google.com](https://aistudio.google.com/projects) |
+| `GOOGLE_API_KEY` | optional | [aistudio.google.com](https://aistudio.google.com/projects) — only for `LLM_PROVIDER = "gemini"` |
+| `OPENROUTER_API_KEY` | ✅ (default LLM) | [openrouter.ai/keys](https://openrouter.ai/keys) — required for `LLM_PROVIDER = "openrouter"` |
+| `OPENROUTER_LLM_MODEL` | optional | OpenRouter model slug, e.g. `openai/gpt-4o-mini` |
+| `OPENROUTER_SITE_URL` | optional | Sent as `HTTP-Referer` header to OpenRouter |
+| `OPENROUTER_APP_NAME` | optional | Sent as `X-Title` header to OpenRouter |
 | `SUPABASE_URL` | optional | [supabase.com](https://supabase.com) — for the ticketing tool |
 | `SUPABASE_API_KEY` | optional | Supabase project → API settings |
 
@@ -135,8 +139,25 @@ Open `agent_friday.py` and change the provider constants at the top:
 
 ```python
 STT_PROVIDER = "sarvam"   # "sarvam" | "whisper"
-LLM_PROVIDER = "gemini"   # "gemini" | "openai"
-TTS_PROVIDER = "openai"   # "openai" | "sarvam"
+LLM_PROVIDER = "openrouter"   # default; can still be "gemini" or "openai"
+TTS_PROVIDER = "sarvam"   # default; can be "openai"
+```
+
+> Note: OpenRouter is used here for the **LLM** path. STT/TTS are separate providers in this codebase.
+
+If you use OpenRouter:
+
+```bash
+# .env
+OPENROUTER_API_KEY=sk-or-...
+OPENROUTER_LLM_MODEL=openai/gpt-4o-mini
+```
+
+Then set in `agent_friday.py`:
+
+```python
+LLM_PROVIDER = "openrouter"
+OPENROUTER_LLM_MODEL = "openai/gpt-4o-mini"  # replace with any OpenRouter model slug
 ```
 
 ---

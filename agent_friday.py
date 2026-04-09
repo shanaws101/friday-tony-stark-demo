@@ -29,11 +29,13 @@ from livekit.plugins import google as lk_google, openai as lk_openai, sarvam, si
 # ---------------------------------------------------------------------------
 
 STT_PROVIDER       = "sarvam"
-LLM_PROVIDER       = "gemini"
-TTS_PROVIDER       = "openai"
+LLM_PROVIDER       = "openrouter"
+TTS_PROVIDER       = "sarvam"
 
 GEMINI_LLM_MODEL   = "gemini-2.5-flash"
 OPENAI_LLM_MODEL   = "gpt-4o"
+OPENROUTER_LLM_MODEL = "openai/gpt-4o-mini"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 OPENAI_TTS_MODEL   = "tts-1"
 OPENAI_TTS_VOICE   = "nova"       # "nova" has a clean, confident female tone
@@ -203,6 +205,21 @@ def _build_llm():
     if LLM_PROVIDER == "openai":
         logger.info("LLM → OpenAI (%s)", OPENAI_LLM_MODEL)
         return lk_openai.LLM(model=OPENAI_LLM_MODEL)
+    elif LLM_PROVIDER == "openrouter":
+        openrouter_model = os.getenv("OPENROUTER_LLM_MODEL", OPENROUTER_LLM_MODEL)
+        logger.info("LLM → OpenRouter (%s)", openrouter_model)
+        openrouter_key = os.getenv("OPENROUTER_API_KEY")
+        if not openrouter_key:
+            raise ValueError("OPENROUTER_API_KEY is required when LLM_PROVIDER='openrouter'")
+        return lk_openai.LLM(
+            model=openrouter_model,
+            api_key=openrouter_key,
+            base_url=OPENROUTER_BASE_URL,
+            extra_headers={
+                "HTTP-Referer": os.getenv("OPENROUTER_SITE_URL", "http://localhost"),
+                "X-Title": os.getenv("OPENROUTER_APP_NAME", "friday-tony-stark-demo"),
+            },
+        )
     elif LLM_PROVIDER == "gemini":
         logger.info("LLM → Google Gemini (%s)", GEMINI_LLM_MODEL)
         return lk_google.LLM(model=GEMINI_LLM_MODEL, api_key=os.getenv("GOOGLE_API_KEY"))
