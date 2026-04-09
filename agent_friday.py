@@ -30,7 +30,7 @@ from livekit.plugins import google as lk_google, openai as lk_openai, sarvam, si
 
 STT_PROVIDER       = "sarvam"
 LLM_PROVIDER       = "openrouter"
-TTS_PROVIDER       = "sarvam"
+TTS_PROVIDER       = "openai"
 
 GEMINI_LLM_MODEL   = "gemini-2.5-flash"
 OPENAI_LLM_MODEL   = "gpt-4o"

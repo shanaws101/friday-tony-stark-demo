@@ -120,7 +120,7 @@ Copy `.env.example` → `.env` and fill in the values below.
 | `LIVEKIT_API_SECRET` | ✅ | LiveKit Cloud → API Keys |
 | `GROQ_API_KEY` | optional | [console.groq.com](https://console.groq.com) — only needed if you switch `LLM_PROVIDER` to `"groq"` |
 | `SARVAM_API_KEY` | ✅ (default STT) | [dashboard.sarvam.ai](https://dashboard.sarvam.ai) |
-| `OPENAI_API_KEY` | optional | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) — only for `TTS_PROVIDER = "openai"` |
+| `OPENAI_API_KEY` | ✅ (default TTS) | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
 | `DEEPGRAM_API_KEY` | optional | [console.deepgram.com](https://console.deepgram.com) |
 | `GOOGLE_APPLICATION_CREDENTIALS` | optional | GCP service-account JSON path — only for `STT_PROVIDER = "google"` |
 | `GOOGLE_API_KEY` | optional | [aistudio.google.com](https://aistudio.google.com/projects) — only for `LLM_PROVIDER = "gemini"` |
@@ -140,10 +140,8 @@ Open `agent_friday.py` and change the provider constants at the top:
 ```python
 STT_PROVIDER = "sarvam"   # "sarvam" | "whisper"
 LLM_PROVIDER = "openrouter"   # default; can still be "gemini" or "openai"
-TTS_PROVIDER = "sarvam"   # default; can be "openai"
+TTS_PROVIDER = "openai"   # "openai" | "sarvam"
 ```
-
-> Note: OpenRouter is used here for the **LLM** path. STT/TTS are separate providers in this codebase.
 
 If you use OpenRouter:
 
